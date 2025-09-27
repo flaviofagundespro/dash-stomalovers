@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stomalovers-dashboard
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # Variáveis de ambiente do Supabase para o ambiente de build do Vite
+      # Elas serão injetadas no código Javascript durante o build
+      VITE_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stomalovers-dashboard.rule=Host(`dash.stomalovers.com.br`)"
+      - "traefik.http.routers.stomalovers-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.stomalovers-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.stomalovers-dashboard.loadbalancer.server.port=80"
+
+# As variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY
+# devem ser definidas no arquivo .env na sua VPS, no mesmo diretório do docker-compose.yml
+# Exemplo de .env:
+# NEXT_PUBLIC_SUPABASE_URL=https://dyvjgxpomqkbxhgcznyw.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5dmpneHBvbXFrYnhoZ2N6bnl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNjM1MTAsImV4cCI6MjA1ODczOTUxMH0.G8QLXKXQQVTW-QuIHhnRnImCrrms5ex8hjqazaInstwtw
+

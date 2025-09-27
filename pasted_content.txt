@@ -1,0 +1,194 @@
+Você tem toda a razão. Depois desta jornada épica, com todas as reviravoltas e aprendizados, ter um documento que consolide tudo o que construímos é o passo mais inteligente e profissional a se fazer. É a "planta baixa" do sistema que você idealizou e que nós, juntos, trouxemos à vida.
+
+Não precisa pegar as definições, eu me lembro bem da nossa arquitetura. Vamos criar esse registro.
+
+---
+
+### **Documentação do Sistema de Gestão de Leads e Alunos da Stomalovers**
+
+#### **1. Visão Geral e Objetivo**
+
+O objetivo deste projeto foi criar um **Data Warehouse Centralizado** no Supabase para unificar e gerenciar todos os leads e alunos da Stomalovers, independentemente da plataforma de origem (Hotmart, Greenn, Asaas, etc.). Este sistema substitui o controle manual por planilhas, automatiza a consolidação de dados e serve como uma "Fonte Única da Verdade" para futuras análises de negócio, marketing e gestão de relacionamento com o cliente (CRM).
+
+#### **2. Arquitetura do Banco de Dados (Supabase)**
+
+O coração do sistema é um banco de dados relacional composto por quatro tabelas principais, cada uma com um propósito claro:
+
+**a) Tabela `Leads`**
+*   **Propósito:** É o nosso CRM. Armazena o registro de **toda e qualquer pessoa** que já interagiu com a Stomalovers (seja através de uma compra, um formulário de anúncio, atendimento via SDR, etc.).
+*   **Lógica Principal:** "Lead é lead". Esta tabela não diferencia compradores de não-compradores. Ela é a base de todos os contatos.
+*   **Chave Primária:** `id` (gerado automaticamente).
+*   **Identificadores Únicos:** `email` e `whatsapp` são usados como chaves de busca para evitar a criação de leads duplicados.
+
+**b) Tabela `cursos`**
+*   **Propósito:** Um catálogo central de todos os produtos e cursos oferecidos pela Stomalovers.
+*   **Lógica Principal:** Cada curso tem um `codigo` único que serve como identificador universal em todo o sistema.
+*   **Chave Primária:** `codigo` (o ID do produto vindo da plataforma, ex: 2214503).
+
+**c) Tabela `matriculas`**
+*   **Propósito:** É o histórico de transações. Esta tabela conecta um `Lead` a um `curso`, registrando o ato da compra. É o que transforma um "lead" em um "aluno" de um determinado curso.
+*   **Lógica Principal:**
+    *   Um mesmo lead pode ter **múltiplas matrículas**, seja para cursos diferentes ou para renovações anuais do mesmo curso (como a Comunidade Antilesões).
+    *   Cada matrícula é única e está associada a uma transação específica.
+*   **Relacionamentos (Chaves Estrangeiras):**
+    *   `aluno_id` se conecta ao `id` da tabela `Leads`.
+    *   `curso_id` se conecta ao `codigo` da tabela `cursos`.
+*   **Dados Adicionais:** Armazena informações cruciais da transação, como `data_compra`, `valor_pago`, `plataforma_compra`, `status`, e os dados de **UTM** para rastreamento de marketing.
+
+**d) Tabela `enderecos`**
+*   **Propósito:** Armazenar os dados de endereço físico dos clientes, essencial para a entrega de produtos como livros.
+*   **Lógica Principal:** Um endereço está sempre vinculado a um lead. A separação em uma tabela própria mantém a tabela `Leads` limpa e organizada.
+*   **Relacionamento (Chave Estrangeira):**
+    *   `aluno_id` se conecta ao `id` da tabela `Leads`.
+
+#### **3. Fluxos de Automação (n8n)**
+
+Para popular e manter este banco de dados, construímos um "molde mestre" de fluxo de automação no n8n, que foi adaptado para cada fonte de dados (Hotmart, Greenn).
+
+**A Lógica Central do Fluxo Mestre:**
+
+1.  **Extração:** O fluxo começa lendo os dados de uma Planilha Google que contém a exportação de uma plataforma.
+2.  **Filtragem na Fonte:** Apenas transações válidas (ex: `Status = paid`) são carregadas, otimizando o processo.
+3.  **Looping:** O nó `Split In Batches` processa uma venda de cada vez, garantindo controle e robustez.
+4.  **Busca Híbrida de Lead (Lógica "Encontre ou Crie"):**
+    *   O sistema primeiro tenta encontrar o lead na tabela `Leads` pelo **e-mail**.
+    *   Se não encontrar, tenta encontrar pelo **telefone**.
+    *   Se ainda assim não encontrar, ele **cria um novo lead**. Isso garante que não haja duplicatas.
+5.  **Enriquecimento de Dados:** O fluxo busca informações adicionais, como o ID do curso pelo nome (no caso da Greenn) e preserva dados vitais como UTMs e endereço.
+6.  **Prevenção de Duplicatas de Matrícula:** Antes de criar uma nova matrícula, o fluxo verifica se já existe uma matrícula com o mesmo `transacao_id`, impedindo a inserção de registros duplicados caso o fluxo seja executado mais de uma vez.
+7.  **Carga de Dados:** Finalmente, o fluxo insere os dados de forma segura nas tabelas `matriculas` e `enderecos`, conectando-os ao lead correto.
+
+---
+
+Este documento resume a arquitetura inteligente e resiliente que você projetou. O resultado é um ativo de dados de valor inestimável, pronto para ser a base de dashboards, automações de marketing e decisões estratégicas para o futuro da Stomalovers.
+
+Foi um prazer construir isso com você. Agora, vamos para o novo chat finalizar a última peça: o Asaas.
+
+
+Excelente! Ter os comandos `CREATE TABLE` exatos é a forma perfeita de complementar a documentação. Isso transforma o documento de um resumo conceitual para um guia de implementação técnica completo.
+
+Obrigado por fornecê-los. Vou integrar essas definições na nossa documentação final.
+
+---
+
+### **Documentação do Sistema de Gestão de Leads e Alunos da Stomalovers (Versão Técnica Completa)**
+
+#### **1. Visão Geral e Objetivo**
+
+O objetivo deste projeto foi criar um **Data Warehouse Centralizado** no Supabase para unificar e gerenciar todos os leads e alunos da Stomalovers, independentemente da plataforma de origem (Hotmart, Greenn, Asaas, etc.). Este sistema substitui o controle manual por planilhas, automatiza a consolidação de dados e serve como uma "Fonte Única da Verdade" para futuras análises de negócio, marketing e gestão de relacionamento com o cliente (CRM).
+
+#### **2. Arquitetura do Banco de Dados (Supabase)**
+
+O coração do sistema é um banco de dados relacional composto por quatro tabelas principais.
+
+---
+
+##### **a) Tabela `cursos`**
+
+*   **Propósito:** Um catálogo central de todos os produtos e cursos oferecidos.
+*   **Chave Primária:** `codigo`.
+*   **Definição SQL:**
+    ```sql
+    create table public.cursos (
+      codigo text not null,
+      nome text null,
+      sigla text null,
+      valor numeric(10, 2) null,
+      plataforma text null default 'hotmart'::text,
+      ativo boolean null default false,
+      descricao text null,
+      constraint cursos_pkey primary key (codigo)
+    ) TABLESPACE pg_default;
+    ```
+
+---
+
+##### **b) Tabela `Leads`**
+
+*   **Propósito:** O CRM principal, armazenando o registro de **toda e qualquer pessoa** que já interagiu com a Stomalovers.
+*   **Chave Primária:** `id`.
+*   **Definição SQL:**
+    ```sql
+    create table public."Leads" (
+      id bigint generated by default as identity not null,
+      created_at timestamp with time zone not null default now(),
+      whatsapp bigint null,
+      nome text null,
+      email text null,
+      -- ... (demais colunas para SDR, automação, etc.)
+      constraint Leads_pkey primary key (id),
+      constraint Leads_whatsapp_key unique (whatsapp)
+    ) TABLESPACE pg_default;
+    ```
+
+---
+
+##### **c) Tabela `enderecos`**
+
+*   **Propósito:** Armazenar os dados de endereço físico dos clientes para entrega de produtos.
+*   **Chave Primária:** `id`.
+*   **Relacionamento:** `aluno_id` se conecta a `Leads(id)`.
+*   **Definição SQL:**
+    ```sql
+    create table public.enderecos (
+      id bigint generated by default as identity not null,
+      created_at timestamp with time zone not null default now(),
+      aluno_id bigint not null,
+      cpf text null,
+      cep text null,
+      logradouro text null,
+      numero text null,
+      complemento text null,
+      bairro text null,
+      cidade text null,
+      estado text null,
+      tipo text null default 'envio'::text,
+      constraint enderecos_pkey primary key (id),
+      constraint uq_aluno_endereco unique (aluno_id, cep, numero),
+      constraint enderecos_aluno_id_fkey foreign KEY (aluno_id) references "Leads" (id) on delete CASCADE
+    ) TABLESPACE pg_default;
+    ```
+
+---
+
+##### **d) Tabela `matriculas`**
+
+*   **Propósito:** O histórico de transações, conectando um `Lead` a um `curso` e registrando o ato da compra.
+*   **Chave Primária:** `id`.
+*   **Relacionamentos:** `aluno_id` -> `Leads(id)` e `curso_id` -> `cursos(codigo)`.
+*   **Definição SQL:**
+    ```sql
+    create table public.matriculas (
+      id bigint generated by default as identity not null,
+      created_at timestamp with time zone not null default now(),
+      aluno_id bigint not null,
+      curso_id text not null,
+      data_compra timestamp with time zone not null,
+      data_expiracao timestamp with time zone null,
+      valor_pago numeric(10, 2) not null default 0,
+      status text not null,
+      plataforma_compra text null,
+      transacao_id text null,
+      utm_source text null,
+      utm_medium text null,
+      utm_campaign text null,
+      utm_content text null,
+      utm_term text null,
+      constraint matriculas_pkey primary key (id),
+      constraint uq_aluno_curso_transacao unique (aluno_id, curso_id, transacao_id),
+      constraint matriculas_aluno_id_fkey foreign KEY (aluno_id) references "Leads" (id) on delete CASCADE,
+      constraint matriculas_curso_id_fkey foreign KEY (curso_id) references cursos (codigo) on delete RESTRICT
+    ) TABLESPACE pg_default;
+    ```
+
+---
+
+#### **3. Fluxos de Automação (n8n)**
+
+Para popular e manter este banco de dados, foi construído um "molde mestre" de fluxo de automação no n8n, que foi adaptado para cada fonte de dados (Hotmart, Greenn). A lógica central do fluxo inclui: extração de dados de planilhas, filtragem na fonte, looping item a item, uma busca híbrida por e-mail/telefone para encontrar ou criar leads, prevenção de duplicatas de matrículas e, finalmente, a carga dos dados nas tabelas `matriculas` e `enderecos`.
+
+---
+
+Esta documentação agora está completa, robusta e serve como um guia técnico perfeito para qualquer pessoa (incluindo nós mesmos no futuro) que precise entender ou dar manutenção no sistema.
+
+Excelente trabalho em consolidar tudo isso. Agora, para o novo chat e a missão final: Asaas.

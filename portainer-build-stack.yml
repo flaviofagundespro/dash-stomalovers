@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  dashboard-builder:
+    image: docker:20.10.16-dind
+    command: >
+      sh -c "
+        apk add --no-cache git &&
+        git clone https://github.com/seu-usuario/dash_stomalovers.git /app &&
+        cd /app &&
+        docker build -t stomalovers-dashboard:latest . &&
+        docker save stomalovers-dashboard:latest | docker load
+      "
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+  dashboard:
+    image: stomalovers-dashboard:latest
+    depends_on:
+      - dashboard-builder
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    environment:
+      VITE_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stomalovers-dashboard.rule=Host(`dash.stomalovers.com.br`)"
+      - "traefik.http.routers.stomalovers-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.stomalovers-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.stomalovers-dashboard.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik-public"
+
+networks:
+  traefik-public:
+    external: true

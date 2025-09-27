@@ -1,0 +1,15 @@
+root@poseidon-17jul25:~# docker ps
+CONTAINER ID   IMAGE                              COMMAND                  CREATED        STATUS        PORTS                                                                          NAMES
+84ed5470e5f4   percona/percona-server:8.0         "/docker-entrypoint.…"   13 hours ago   Up 13 hours   3306/tcp, 33060/tcp                                                            mysql_mysql.1.izlafkw7fwnjdmjfz0anztm76
+b92d5d4c2e4c   n8nio/n8n:latest                   "tini -- /docker-ent…"   13 hours ago   Up 13 hours   5678/tcp                                                                       n8n6awv4qi_n8n6awv4qi_admin.1.y4r6iq8a8x6d0rcstn4r0rbjb
+6400f5b8c234   traefik:v2.11                      "/entrypoint.sh --pr…"   13 hours ago   Up 13 hours   0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp   traefik_traefik.1.o3q0uukhj6i3idrk8zvvhh19z
+6f798f0e5f17   evoapicloud/evolution-api:latest   "/bin/bash -c '. ./D…"   13 hours ago   Up 13 hours   8080/tcp                                                                       evolutiondvrknos_evolutiondvrknos.1.vd0neantnajhi2zheqmyxqw0q
+4290e2d1b4aa   portainer/portainer-ce:latest      "/portainer --admin-…"   13 hours ago   Up 13 hours   8000/tcp, 9000/tcp, 9443/tcp                                                   portainer_portainer_ce.1.j7k7nfeoe5f2kqvwxcrieek93
+a440c3f46dbf   arm64v8/phpmyadmin:latest          "/docker-entrypoint.…"   13 hours ago   Up 13 hours   80/tcp                                                                         pmak1177yd_pmak1177yd.1.ill5r6lodp035n86gzmy6n12c
+f344395d965e   wordpress:latest                   "docker-entrypoint.s…"   13 hours ago   Up 13 hours   80/tcp                                                                         wordpressz5szff4_wordpressz5szff4.1.xwkn9h57b9obj2ivmuvui8eds
+0f257d903f95   n8nio/n8n:latest                   "tini -- /docker-ent…"   13 hours ago   Up 13 hours   5678/tcp                                                                       n8n6awv4qi_n8n6awv4qi_worker.1.qzlu0mxxcjdb397td7z0myvye
+f79b9b3aa47c   redis:latest                       "docker-entrypoint.s…"   13 hours ago   Up 13 hours   6379/tcp                                                                       redis_redis.1.8hh8p9g09x93cswhpfx7iy26t
+d37048acdf78   pgvector/pgvector:pg15             "docker-entrypoint.s…"   13 hours ago   Up 13 hours   5432/tcp                                                                       postgres_postgres.1.z25hq9chplb2235u8dhmay5so
+736f8e21e294   n8nio/n8n:latest                   "tini -- /docker-ent…"   13 hours ago   Up 13 hours   5678/tcp                                                                       n8n6awv4qi_n8n6awv4qi_webhook.1.eywe85evy2q64uqf48inriz1j
+e5b987b508ff   mongo:6                            "docker-entrypoint.s…"   13 hours ago   Up 13 hours   27017/tcp                                                                      mongodb_mongodb.1.zzf7zyghcafckuref1cen11ii
+root@poseidon-17jul25:~#

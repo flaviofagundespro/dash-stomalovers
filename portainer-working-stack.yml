@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  dashboard:
+    image: stomalovers-dashboard:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    environment:
+      VITE_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    networks:
+      - network_swarm_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`dash.stomalovers.com.br`)"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=80"
+      - "traefik.docker.network=network_swarm_public"
+      - "traefik.http.routers.dashboard.priority=200"
+
+networks:
+  network_swarm_public:
+    external: true
