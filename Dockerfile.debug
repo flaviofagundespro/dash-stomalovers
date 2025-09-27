@@ -1,0 +1,56 @@
+# Build stage
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package.json first
+COPY package.json ./
+
+# Install pnpm and dependencies (without lockfile)
+RUN npm install -g pnpm
+
+# Debug: List package.json content
+RUN echo "=== PACKAGE.JSON CONTENT ==="
+RUN cat package.json
+
+# Debug: Install dependencies with verbose output
+RUN echo "=== INSTALLING DEPENDENCIES ==="
+RUN pnpm install --verbose
+
+# Debug: List installed packages
+RUN echo "=== INSTALLED PACKAGES ==="
+RUN ls -la node_modules/
+
+# Debug: Check if @supabase exists
+RUN echo "=== CHECKING @SUPABASE ==="
+RUN ls -la node_modules/@supabase/ || echo "❌ @supabase not found"
+
+# Debug: Check supabase-js specifically
+RUN echo "=== CHECKING SUPABASE-JS ==="
+RUN ls -la node_modules/@supabase/supabase-js/ || echo "❌ supabase-js not found"
+
+# Copy source code
+COPY . .
+
+# Debug: List source files
+RUN echo "=== SOURCE FILES ==="
+RUN ls -la src/
+
+# Build the application
+RUN echo "=== BUILDING APPLICATION ==="
+RUN pnpm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy built files to nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
