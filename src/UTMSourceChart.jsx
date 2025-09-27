@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { supabase } from '../../lib/supabase'
+import { supabase } from './supabase.js'
 
 export function UTMSourceChart() {
   const [data, setData] = useState([])
