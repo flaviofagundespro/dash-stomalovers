@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Badge } from './ui/badge'
+import { supabase } from './supabase.js'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card.jsx'
+import { Badge } from './ui/badge.jsx'
 import { Calendar, DollarSign } from 'lucide-react'
 
 export function RecentSales() {

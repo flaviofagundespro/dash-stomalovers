@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
+import { supabase } from './supabase.js'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card.jsx'
+import { Badge } from './ui/badge.jsx'
+import { Button } from './ui/button.jsx'
 import { ArrowUpDown, TrendingUp, Users, DollarSign } from 'lucide-react'
 
 export function CourseTable({ onCourseSelect }) {

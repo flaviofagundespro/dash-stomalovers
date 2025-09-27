@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { login } from '../lib/auth'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Alert, AlertDescription } from './ui/alert'
+import { login } from './auth.js'
+import { Button } from './ui/button.jsx'
+import { Input } from './ui/input.jsx'
+import { Label } from './ui/label.jsx'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card.jsx'
+import { Alert, AlertDescription } from './ui/alert.jsx'
 import { Eye, EyeOff, Lock, User } from 'lucide-react'
 
 export function LoginForm({ onLogin }) {

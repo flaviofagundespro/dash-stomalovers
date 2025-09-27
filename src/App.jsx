@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { isAuthenticated } from './lib/auth'
-import { LoginForm } from './components/LoginForm'
-import { Dashboard } from './components/Dashboard'
+import { isAuthenticated } from './auth.js'
+import { LoginForm } from './LoginForm.jsx'
+import { Dashboard } from './Dashboard.jsx'
 import './App.css'
 
 function App() {
