@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+    mongodb:
+        image: mongo:6
+        command: mongod --port 27077
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=uZNWmEf06ZC6Rr7b
+            - MONGO_INITDB_ROOT_PASSWORD=pgb0jhBzqy2V7JOd
+            - PUID=1000
+            - PGID=1000
+        volumes:
+            - mongodb_data:/data/db
+            - mongodb_configdb_data:/data/configdb
+        networks:
+            - network_public
+        deploy:
+            mode: replicated
+            replicas: 1
+            placement:
+                constraints:
+                    - node.role == manager
+volumes:
+    mongodb_data:
+        external: true
+        name: mongodb_data
+    mongodb_configdb_data:
+        external: true
+        name: mongodb_configdb_data
+networks:
+    network_public:
+        external: true
+        name: network_swarm_public

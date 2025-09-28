@@ -1,0 +1,84 @@
+---
+version: "3.7"
+services:
+  evolutiondvrknos:
+    image: evoapicloud/evolution-api:latest
+    hostname: evolutiondvrknos
+    volumes:
+    - evolutiondvrknos_instances:/evolution/instances
+    - evolutiondvrknos_store:/evolution/store
+    networks:
+    - network_public
+    environment:
+    - DOCKER_ENV=true
+    - SERVER_URL=https://wsapi.stomalovers.com.br
+    - LOG_LEVEL=INFO
+    - DEL_INSTANCE=false
+    - LANGUAGE=pt-BR
+    - AUTHENTICATION_TYPE=apikey
+    - AUTHENTICATION_API_KEY=017929c2-6ed9-499a-a19d-baacb7e2b293
+    - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true
+    - WEBHOOK_GLOBAL_ENABLED=false
+    - WEBHOOK_GLOBAL_URL=
+    - CONFIG_SESSION_PHONE_CLIENT=Windows
+    - CONFIG_SESSION_PHONE_NAME=ChromeWindows
+    - CONFIG_SESSION_PHONE_VERSION=2.3000.1015901307
+    - QRCODE_LIMIT=30
+    - PROVIDER_ENABLED=false
+    - PROVIDER_HOST=127.0.0.1
+    - PROVIDER_PREFIX=evolution
+    - PROVIDER_PORT=5656
+    - DATABASE_ENABLED=true
+    - DATABASE_PROVIDER=postgresql
+    - DATABASE_CONNECTION_CLIENT_NAME=evolutiondvrknos
+    - DATABASE_SAVE_DATA_INSTANCE=true
+    - DATABASE_SAVE_DATA_NEW_MESSAGE=true
+    - DATABASE_SAVE_MESSAGE_UPDATE=true
+    - DATABASE_SAVE_DATA_CONTACTS=true
+    - DATABASE_SAVE_DATA_CHATS=true
+    - DATABASE_SAVE_DATA_LABELS=true
+    - DATABASE_SAVE_DATA_HISTORIC=true
+    - DATABASE_CONNECTION_URI=postgresql://postgres:p7m8kf1FrNo8YKly@postgres:5432/evolutiondvrknos?schema=public
+    - REDIS_ENABLED=true
+    - CACHE_REDIS_ENABLED=true
+    - CACHE_REDIS_URI=redis://redis:6379/1
+    - CACHE_REDIS_PREFIX_KEY=evo2
+    - CACHE_REDIS_SAVE_INSTANCES=true
+    - CACHE_LOCAL_ENABLED=false
+    - SQS_ENABLED=false
+    - OPENAI_ENABLED=true
+    - DIFY_ENABLED=true
+    - WEBSOCKET_ENABLED=false
+    - TYPEBOT_ENABLED=true
+    - TYPEBOT_API_VERSION=latest
+    - CHATWOOT_ENABLED=false
+    - CHATWOOT_MESSAGE_DELETE=false
+    - CHATWOOT_MESSAGE_READ=false
+    - S3_ENABLED=false
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.role == manager
+      labels:
+      - traefik.enable=1
+      - traefik.http.routers.evolutiondvrknos.rule=Host(`wsapi.stomalovers.com.br`)
+      - traefik.http.routers.evolutiondvrknos.entrypoints=websecure
+      - traefik.http.routers.evolutiondvrknos.priority=1
+      - traefik.http.routers.evolutiondvrknos.tls.certresolver=letsencryptresolver
+      - traefik.http.routers.evolutiondvrknos.service=evolutiondvrknos
+      - traefik.http.services.evolutiondvrknos.loadbalancer.server.port=8080
+      - traefik.http.services.evolutiondvrknos.loadbalancer.passHostHeader=1
+volumes:
+  evolutiondvrknos_instances:
+    external: true
+    name: evolutiondvrknos_instancesd
+  evolutiondvrknos_store:
+    external: true
+    name: evolutiondvrknos_stored
+networks:
+  network_public:
+    name: network_swarm_public
+    external: true
+...

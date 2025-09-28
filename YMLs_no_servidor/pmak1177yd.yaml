@@ -1,0 +1,35 @@
+---
+version: "3.7"
+services:
+  pmak1177yd:
+    image: arm64v8/phpmyadmin:latest
+    hostname: pmak1177yd
+    entrypoint: /docker-entrypoint.sh
+    command: apache2-foreground
+    networks:
+    - network_public
+    environment:
+    - PMA_HOSTS=mysql:3306
+    - PMA_ARBITRARY=0
+    - PMA_PORT=3306
+    - PMA_ABSOLUTE_URI=https://phpma.stomalovers.com.br
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.role == manager
+      labels:
+      - traefik.enable=1
+      - traefik.http.routers.pmak1177yd.rule=Host(`phpma.stomalovers.com.br`)
+      - traefik.http.routers.pmak1177yd.entrypoints=websecure
+      - traefik.http.routers.pmak1177yd.priority=1
+      - traefik.http.routers.pmak1177yd.tls.certresolver=letsencryptresolver
+      - traefik.http.routers.pmak1177yd.service=pmak1177yd
+      - traefik.http.services.pmak1177yd.loadbalancer.server.port=80
+      - traefik.http.services.pmak1177yd.loadbalancer.passHostHeader=1
+networks:
+  network_public:
+    name: network_swarm_public
+    external: true
+...

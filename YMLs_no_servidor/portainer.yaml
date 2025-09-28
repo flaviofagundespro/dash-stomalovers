@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  portainer_ce:
+    image: portainer/portainer-ce:latest
+    command: --admin-password='$$2y$$05$$3os5UVR.ZMfdDLLRs7rv2.wy6Cz4WUSP8B.be.i5NPeUdigrySlea'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    networks:
+      - network_public
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_public"
+        - "traefik.http.routers.portainer_ce.rule=Host(`painel.stomalovers.com.br`)"
+        - "traefik.http.routers.portainer_ce.entrypoints=websecure"
+        - "traefik.http.routers.portainer_ce.priority=1"
+        - "traefik.http.routers.portainer_ce.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.portainer_ce.service=portainer_ce"
+        - "traefik.http.services.portainer_ce.loadbalancer.server.port=9000"
+volumes:
+  portainer_data:
+    external: true
+    name: portainer_data
+networks:
+  network_public:
+    external: true
+    name: network_swarm_public

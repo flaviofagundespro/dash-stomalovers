@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    image: stomalovers-dashboard:latest
+    networks:
+      - network_public
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    environment:
+      VITE_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=network_public"
+      
+      # --- Roteador HTTP ---
+      - "traefik.http.routers.dashboard-secure.entrypoints=websecure"
+      - "traefik.http.routers.dashboard-secure.rule=Host(`dash.stomalovers.com.br`)"
+      - "traefik.http.routers.dashboard-secure.priority=10" # <--- MUDE ESTA LINHA DE 1 PARA 10
+      - "traefik.http.routers.dashboard-secure.service=dashboard-svc"
+      
+      # --- Certificado TLS ---
+      - "traefik.http.routers.dashboard-secure.tls=true"
+      - "traefik.http.routers.dashboard-secure.tls.certresolver=letsencryptresolver"
+      
+      # --- Definição do Serviço ---
+      - "traefik.http.services.dashboard-svc.loadbalancer.server.port=80"
+      - "traefik.http.services.dashboard-svc.loadbalancer.passHostHeader=1"
+
+networks:
+  network_public:
+    external: true
+    name: network_swarm_public
