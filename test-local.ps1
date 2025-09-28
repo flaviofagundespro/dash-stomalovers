@@ -11,11 +11,30 @@ try {
     exit 1
 }
 
-# Construir a imagem
-Write-Host "📦 Construindo imagem Docker..." -ForegroundColor Yellow
-$env:VITE_SUPABASE_URL = "https://dyvjgxpomqkbxhgcznyw.supabase.co"
-$env:VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5dmpneHBvbXFrYnhoZ2N6bnl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNjM1MTAsImV4cCI6MjA1ODczOTUxMH0.G8QLXKXQQVTW-QuIHhnRnImCrrms5ex8hjqazaInstw"
+# Verificar se o Node.js está disponível para build local
+Write-Host "📋 Verificando Node.js..." -ForegroundColor Yellow
+try {
+    node --version | Out-Null
+    Write-Host "✅ Node.js está disponível" -ForegroundColor Green
+    
+    # Testar build local primeiro
+    Write-Host "🔨 Testando build local..." -ForegroundColor Yellow
+    $env:VITE_SUPABASE_URL = "https://dyvjgxpomqkbxhgcznyw.supabase.co"
+    $env:VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5dmpneHBvbXFrYnhoZ2N6bnl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNjM1MTAsImV4cCI6MjA1ODczOTUxMH0.G8QLXKXQQVTW-QuIHhnRnImCrrms5ex8hjqazaInstw"
+    
+    npm run build
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✅ Build local funcionou!" -ForegroundColor Green
+    } else {
+        Write-Host "❌ Build local falhou!" -ForegroundColor Red
+        exit 1
+    }
+} catch {
+    Write-Host "⚠️ Node.js não disponível, pulando teste local" -ForegroundColor Yellow
+}
 
+# Construir a imagem Docker
+Write-Host "📦 Construindo imagem Docker..." -ForegroundColor Yellow
 docker build --build-arg VITE_SUPABASE_URL="$env:VITE_SUPABASE_URL" --build-arg VITE_SUPABASE_ANON_KEY="$env:VITE_SUPABASE_ANON_KEY" -t stomalovers-dashboard:test .
 
 if ($LASTEXITCODE -eq 0) {

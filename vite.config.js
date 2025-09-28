@@ -3,7 +3,11 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxRuntime: 'automatic'
+    })
+  ],
   define: {
     // Garantir que as variáveis de ambiente sejam definidas no build
     'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(process.env.VITE_SUPABASE_URL || 'https://dyvjgxpomqkbxhgcznyw.supabase.co'),
@@ -24,5 +28,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true
+  },
+  esbuild: {
+    jsx: 'automatic'
   }
 })
