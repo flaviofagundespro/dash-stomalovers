@@ -20,7 +20,7 @@ export function UTMSourceChart() {
       
       const { data: matriculas, error } = await supabase
         .from('matriculas')
-        .select('valor, utm_source')
+        .select('valor_pago, utm_source')
         .gte('data_compra', twelveMonthsAgo.toISOString().split('T')[0])
 
       if (error) {
@@ -33,7 +33,7 @@ export function UTMSourceChart() {
       
       matriculas?.forEach(matricula => {
         const source = matricula.utm_source || 'Direto/Não identificado'
-        const value = parseFloat(matricula.valor) || 0
+        const value = parseFloat(matricula.valor_pago) || 0
         
         if (!sourceRevenue[source]) {
           sourceRevenue[source] = {

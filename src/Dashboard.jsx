@@ -46,7 +46,7 @@ export function Dashboard() {
       // Buscar dados básicos para os KPIs
       const { data: matriculas, error: matriculasError } = await supabase
         .from('matriculas')
-        .select('valor, data_compra')
+        .select('valor_pago, data_compra')
         .order('data_compra', { ascending: false })
 
       if (matriculasError) {
@@ -63,7 +63,7 @@ export function Dashboard() {
         return date.getMonth() === currentMonth && date.getFullYear() === currentYear
       }) || []
 
-      const totalRevenue = currentMonthMatriculas.reduce((sum, m) => sum + (parseFloat(m.valor) || 0), 0)
+      const totalRevenue = currentMonthMatriculas.reduce((sum, m) => sum + (parseFloat(m.valor_pago) || 0), 0)
       const newStudents = currentMonthMatriculas.length
       const averageTicket = newStudents > 0 ? totalRevenue / newStudents : 0
 

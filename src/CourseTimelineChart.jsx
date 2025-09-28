@@ -24,7 +24,7 @@ export function CourseTimelineChart({ selectedCourse }) {
       
       const { data: matriculas, error } = await supabase
         .from('matriculas')
-        .select('valor, data_compra')
+        .select('valor_pago, data_compra')
         .eq('curso_id', selectedCourse.codigo)
         .gte('data_compra', twelveMonthsAgo.toISOString().split('T')[0])
         .order('data_compra', { ascending: true })
@@ -52,7 +52,7 @@ export function CourseTimelineChart({ selectedCourse }) {
         }
         
         monthlyData[monthKey].vendas += 1
-        monthlyData[monthKey].receita += parseFloat(matricula.valor) || 0
+        monthlyData[monthKey].receita += parseFloat(matricula.valor_pago) || 0
       })
 
       // Converter para array e ordenar por data

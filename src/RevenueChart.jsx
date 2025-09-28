@@ -20,7 +20,7 @@ export function RevenueChart() {
       
       const { data: matriculas, error } = await supabase
         .from('matriculas')
-        .select('valor, data_compra')
+        .select('valor_pago, data_compra')
         .gte('data_compra', sixMonthsAgo.toISOString().split('T')[0])
         .order('data_compra', { ascending: true })
 
@@ -44,7 +44,7 @@ export function RevenueChart() {
           }
         }
         
-        monthlyRevenue[monthKey].receita += parseFloat(matricula.valor) || 0
+        monthlyRevenue[monthKey].receita += parseFloat(matricula.valor_pago) || 0
       })
 
       // Converter para array e ordenar

@@ -20,9 +20,9 @@ export function RecentSales() {
         .from('matriculas')
         .select(`
           id,
-          valor,
+          valor_pago,
           data_compra,
-          plataforma,
+          plataforma_compra,
           Leads (
             nome,
             email
@@ -119,8 +119,8 @@ export function RecentSales() {
                   <h4 className="font-medium text-gray-900">
                     {sale.Leads?.nome || 'Nome não disponível'}
                   </h4>
-                  <Badge className={getPlatformColor(sale.plataforma)}>
-                    {sale.plataforma || 'N/A'}
+                  <Badge className={getPlatformColor(sale.plataforma_compra)}>
+                    {sale.plataforma_compra || 'N/A'}
                   </Badge>
                 </div>
                 <p className="text-sm text-gray-600 mb-1">
@@ -134,7 +134,7 @@ export function RecentSales() {
                   <div className="flex items-center space-x-1">
                     <DollarSign className="w-3 h-3" />
                     <span className="font-semibold text-green-600">
-                      {formatCurrency(sale.valor)}
+                      {formatCurrency(sale.valor_pago)}
                     </span>
                   </div>
                 </div>

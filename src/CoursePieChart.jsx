@@ -23,7 +23,7 @@ export function CoursePieChart() {
       const { data: matriculas, error } = await supabase
         .from('matriculas')
         .select(`
-          valor,
+          valor_pago,
           cursos (
             nome
           )
@@ -40,7 +40,7 @@ export function CoursePieChart() {
       
       matriculas?.forEach(matricula => {
         const courseName = matricula.cursos?.nome || 'Curso não identificado'
-        const value = parseFloat(matricula.valor) || 0
+        const value = parseFloat(matricula.valor_pago) || 0
         
         if (!courseRevenue[courseName]) {
           courseRevenue[courseName] = 0

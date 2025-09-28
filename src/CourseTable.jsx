@@ -26,7 +26,7 @@ export function CourseTable({ onCourseSelect }) {
       const { data: matriculas, error } = await supabase
         .from('matriculas')
         .select(`
-          valor,
+          valor_pago,
           data_compra,
           cursos (
             codigo,
@@ -49,7 +49,7 @@ export function CourseTable({ onCourseSelect }) {
         if (!curso) return
         
         const courseKey = curso.codigo
-        const value = parseFloat(matricula.valor) || 0
+        const value = parseFloat(matricula.valor_pago) || 0
         const date = new Date(matricula.data_compra)
         
         if (!courseStats[courseKey]) {

@@ -21,7 +21,7 @@ export function GeographicChart() {
       const { data: matriculas, error } = await supabase
         .from('matriculas')
         .select(`
-          valor,
+          valor_pago,
           data_compra,
           Leads (
             id,
@@ -42,7 +42,7 @@ export function GeographicChart() {
       
       matriculas?.forEach(matricula => {
         const estado = matricula.Leads?.enderecos?.estado || 'Não informado'
-        const value = parseFloat(matricula.valor) || 0
+        const value = parseFloat(matricula.valor_pago) || 0
         
         if (!stateData[estado]) {
           stateData[estado] = {

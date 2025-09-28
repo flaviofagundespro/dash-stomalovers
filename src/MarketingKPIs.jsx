@@ -28,7 +28,7 @@ export function MarketingKPIs() {
       
       const { data: matriculas, error } = await supabase
         .from('matriculas')
-        .select('valor, utm_source, utm_campaign')
+        .select('valor_pago, utm_source, utm_campaign')
         .gte('data_compra', twelveMonthsAgo.toISOString().split('T')[0])
 
       if (error) {
@@ -53,7 +53,7 @@ export function MarketingKPIs() {
       matriculas?.forEach(matricula => {
         const source = matricula.utm_source || 'Direto'
         const campaign = matricula.utm_campaign || 'Sem campanha'
-        const value = parseFloat(matricula.valor) || 0
+        const value = parseFloat(matricula.valor_pago) || 0
         
         // Canais
         if (!channels[source]) {
