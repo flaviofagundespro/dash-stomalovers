@@ -113,9 +113,9 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
@@ -142,7 +142,7 @@ export function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-white rounded-lg shadow p-2">
             <TabsTrigger value="overview" className="flex items-center space-x-2">
               <TrendingUp className="w-4 h-4" />
               <span>Visão Geral</span>
@@ -246,7 +246,9 @@ export function Dashboard() {
             </div>
 
             {/* Vendas Recentes */}
-            <RecentSales />
+            <div className="mt-8">
+              <RecentSales />
+            </div>
           </TabsContent>
 
           {/* Marketing */}
@@ -277,16 +279,17 @@ export function Dashboard() {
               </Card>
             </div>
 
-            {/* Distribuição Geográfica */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Distribuição Geográfica</CardTitle>
-                <CardDescription>Número de alunos por estado</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <GeographicChart />
-              </CardContent>
-            </Card>
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Distribuição Geográfica</CardTitle>
+                  <CardDescription>Número de alunos por estado</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <GeographicChart />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Produtos */}
@@ -294,21 +297,22 @@ export function Dashboard() {
             {/* Tabela de Cursos */}
             <CourseTable onCourseSelect={setSelectedCourse} />
 
-            {/* Gráfico de Curso Específico */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Vendas por Curso ao Longo do Tempo</CardTitle>
-                <CardDescription>
-                  {selectedCourse 
-                    ? `Análise temporal de ${selectedCourse.nome}` 
-                    : 'Selecione um curso na tabela acima para ver o gráfico'
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CourseTimelineChart selectedCourse={selectedCourse} />
-              </CardContent>
-            </Card>
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Vendas por Curso ao Longo do Tempo</CardTitle>
+                  <CardDescription>
+                    {selectedCourse 
+                      ? `Análise temporal de ${selectedCourse.nome}` 
+                      : 'Selecione um curso na tabela acima para ver o gráfico'
+                    }
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <CourseTimelineChart selectedCourse={selectedCourse} />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </main>
