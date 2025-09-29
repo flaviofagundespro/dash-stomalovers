@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { isAuthenticated } from './auth.js'
 import { LoginForm } from './LoginForm.jsx'
 import { Dashboard } from './Dashboard.jsx'
-import './App.css'
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false)
