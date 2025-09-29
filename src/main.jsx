@@ -2,8 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './App.css'
-import './index.css'
-import './tailwind.css' // Certifique-se de que o caminho para o seu CSS do Tailwind esteja correto
+import './index.css' // Mantido apenas o index.css para o Tailwind
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
