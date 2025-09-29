@@ -1,12 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react({
       jsxRuntime: 'automatic'
-    })
+    }),
+    tailwindcss() // Plugin do Tailwind CSS v4
   ],
   define: {
     // Garantir que as variáveis de ambiente sejam definidas no build
@@ -20,7 +22,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-card']
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-tabs']
         }
       }
     }
