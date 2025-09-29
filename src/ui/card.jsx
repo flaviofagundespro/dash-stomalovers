@@ -1,8 +1,7 @@
-
 export function Card({ children, className = '', ...props }) {
   return (
     <div 
-      className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`}
+      className={`rounded-lg border bg-white text-gray-900 shadow-sm ${className}`}
       {...props}
     >
       {children}
@@ -35,7 +34,7 @@ export function CardTitle({ children, className = '', ...props }) {
 export function CardDescription({ children, className = '', ...props }) {
   return (
     <p 
-      className={`text-sm text-muted-foreground ${className}`}
+      className={`text-sm text-gray-500 ${className}`}
       {...props}
     >
       {children}
